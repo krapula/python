@@ -57,15 +57,27 @@ def getLineInfo(line):
 
     return info
 
+def findFirstRelevantLine():
+    i = 0
+    for line in source:
+        if line[:4] == 'sshd':
+            return i - 1    # we need the previous line for metadata
+        else:
+            i += 1
+
 
 # Starting program
+print '# Starting script'
 lineno = 1
 home = expanduser("~")
 destfile = open(home+'/result_log.csv', 'w')
 source = open('/etc/hosts.deny', 'r')
 
-for i in xrange(20):
-    source.next()
+rowsToSkip = findFirstRelevantLine()
+source.seek(0)  # reset to start of file
+
+for i in xrange(rowsToSkip):
+    source.readline()
 
 for line in source:
     if line[:1] == '#':
@@ -85,3 +97,5 @@ for line in source:
         else:
             destfile.write(result + ',' + lineinfo + '\n')
             lineno += 1
+
+print '# Ending script'
