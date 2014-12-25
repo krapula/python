@@ -42,7 +42,7 @@ for i in xrange(20):
     source.next()
 
 for line in source:
-    if line[:1] == '#' and lineno < 5:
+    if line[:1] == '#'
         if lineno % 250 == 0:
             print 'Pausing for a minute. Max 250 lookups per minute.'
             time.sleep(60)
@@ -58,6 +58,10 @@ for line in source:
         print '{}: IP {}'.format(lineno,ip)
         lineinfo = '{},{}-{}-{},{},{},'.format(weekday,year,monthno,daymonth,time,ip)
         result = checkip(ip)
-        #print result+lineinfo
-        destfile.write(result + lineinfo + '\n')
-        lineno += 1
+
+        if result[:4] == 'fail':
+            print 'Error code received. Aborting.'
+            break
+        else:
+            destfile.write(result + lineinfo + '\n')
+            lineno += 1
